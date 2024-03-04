@@ -43,8 +43,38 @@ find_package(Python 3.8
 # Import nanobind through CMake's find_package mechanism
 find_package(nanobind CONFIG REQUIRED)
 
-# Add voro++ library target
-add_subdirectory(ext)
+# Import OpenMP
+find_package(OpenMP)
+
+if (OPENMP_FOUND)
+  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
+
+set(
+    VORO_SOURCES
+    ext/voro/src/cell_2d.cc
+    ext/voro/src/cell_3d.cc
+    ext/voro/src/common.cc
+    ext/voro/src/container_2d.cc
+    ext/voro/src/container_3d.cc
+    ext/voro/src/container_tri.cc
+    ext/voro/src/iter_2d.cc
+    ext/voro/src/iter_3d.cc
+    ext/voro/src/particle_list.cc
+    ext/voro/src/unitcell.cc
+    ext/voro/src/v_base_2d.cc
+    ext/voro/src/v_base_3d.cc
+    ext/voro/src/v_compute_2d.cc
+    ext/voro/src/v_compute_3d.cc
+    ext/voro/src/wall_2d.cc
+    ext/voro/src/wall_3d.cc
+    ext/voro/src/wall.cc
+
+)
+# prepend the relative path to the submodule external location of the sources
+list(TRANSFORM "${VORO_SOURCES}" PREPEND "ext/voro/src/")
 
 # We are now ready to compile the actual extension module
 nanobind_add_module(
@@ -58,27 +88,16 @@ nanobind_add_module(
 
   # Source code goes here
   src/multivoro.cpp
+  ${VORO_SOURCES}
 )
 
 target_include_directories(
-    _multivoro INTERFACE
-    "${BUILD_INTERFACE}:${PROJECT_SOURCE_DIR}/ext/voro/src"
+    _multivoro
+    PRIVATE
+    ext/voro/src
 )
 
-#include_directories("${CMAKE_SOURCE_DIR}/ext/voro/src")
-
-#get_target_property(VORO_PUBLIC_HEADER voro++ PUBLIC_HEADER)
-
-
-target_include_directories(_multivoro SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/ext/voro/src")
-
-#target_link_libraries(_multivoro "${VORO_PUBLIC_HEADER}")
-#target_include_directories(
-#    _multivoro
-#    SYSTEM
-#    PRIVATE
-#    $<TARGET_PROPERTY:voro++,INTERFACE_INCLUDE_DIRECTORIES>
-#)
+target_link_libraries(_multivoro PRIVATE ${OpenMP_CXX_FLAGS})
 
 # Install directive for scikit-build-core
-#install(TARGETS _multivoro LIBRARY DESTINATION multivoro)
+install(TARGETS _multivoro LIBRARY DESTINATION multivoro)
