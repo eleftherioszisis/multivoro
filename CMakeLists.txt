@@ -1,8 +1,15 @@
 # Set the minimum CMake version and policies for highest tested version
 cmake_minimum_required(VERSION 3.15...3.27)
 
-# Set up the project and ensure there is a working C++ compiler
-project(multivoro LANGUAGES CXX)
+project(
+  # name of the project
+  multivoro
+
+  DESCRIPTION "Python Binding for multi-threaded voro++ library."
+
+  # ensure there is a working c++ compiler
+  LANGUAGES CXX
+)
 
 # Warn if the user invokes CMake directly
 if (NOT SKBUILD)
@@ -36,6 +43,9 @@ find_package(Python 3.8
 # Import nanobind through CMake's find_package mechanism
 find_package(nanobind CONFIG REQUIRED)
 
+# Add voro++ library target
+add_subdirectory(ext)
+
 # We are now ready to compile the actual extension module
 nanobind_add_module(
   # Name of the extension
@@ -47,8 +57,28 @@ nanobind_add_module(
   STABLE_ABI
 
   # Source code goes here
-  src/multi_voro.cpp
+  src/multivoro.cpp
 )
 
+target_include_directories(
+    _multivoro INTERFACE
+    "${BUILD_INTERFACE}:${PROJECT_SOURCE_DIR}/ext/voro/src"
+)
+
+#include_directories("${CMAKE_SOURCE_DIR}/ext/voro/src")
+
+#get_target_property(VORO_PUBLIC_HEADER voro++ PUBLIC_HEADER)
+
+
+target_include_directories(_multivoro SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/ext/voro/src")
+
+#target_link_libraries(_multivoro "${VORO_PUBLIC_HEADER}")
+#target_include_directories(
+#    _multivoro
+#    SYSTEM
+#    PRIVATE
+#    $<TARGET_PROPERTY:voro++,INTERFACE_INCLUDE_DIRECTORIES>
+#)
+
 # Install directive for scikit-build-core
-install(TARGETS _multivoro LIBRARY DESTINATION multivoro)
+#install(TARGETS _multivoro LIBRARY DESTINATION multivoro)
