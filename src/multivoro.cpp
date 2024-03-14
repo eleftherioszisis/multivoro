@@ -3,8 +3,9 @@
 
 namespace nb = nanobind;
 
+
 NB_MODULE(_multivoro, m) {
-    nb::class_<voro::container_base_3d>(m, "container_base_3d")
+    nb::class_<voro::container_poly_3d>(m, "ContainerPoly")
         .def(
             nb::init<
                 double, // ax
@@ -20,8 +21,8 @@ NB_MODULE(_multivoro, m) {
                 bool,   // y_prd
                 bool,   // z_prd
                 int,    // init_mem
-                int,    // ps_
                 int     // nt_
             >()
-        );
+        )
+        .def("put", nb::overload_cast<int,double,double,double,double>(&voro::container_poly_3d::put));
 }
