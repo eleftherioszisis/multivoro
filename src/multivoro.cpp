@@ -24,10 +24,12 @@
 namespace nb = nanobind;
 
 using IntVector = std::vector<int>;
+using DoubleVector = std::vector<double>;
 
 struct Cell {
-    IntVector neighbors{};
+    IntVector neighbors;
     IntVector face_vertices;
+    DoubleVector vertices;
 };
 
 using CellVector = std::vector<Cell>;
@@ -43,8 +45,6 @@ CellVector inline compute_voronoi_3d(
     // views for fast access
     auto v_points = points.view();
     auto v_radii = radii.view();
-
-    std::cout << "init" << std::endl;
 
     // initialize container
     voro::container_poly_3d container(
@@ -77,21 +77,25 @@ CellVector inline compute_voronoi_3d(
         // cell from voro++ implementation with all kinds of stuff
         voro::voronoicell_neighbor_3d impl_cell;
 
+        // compute voronoi cell
         container.compute_cell(impl_cell, it);
 
         // find the id of the cell from its block index and block local position
-        auto cell_index = container.id[it->ijk][it->q];
+        const auto cell_index = container.id[it->ijk][it->q];
 
         // cell we are returning with well-behaved attributes
         auto& cell = cells[cell_index];
 
         // populate the return cell attributes using the voro cell methods
+        impl_cell.vertices(
+            v_points(cell_index, 0),
+            v_points(cell_index, 1),
+            v_points(cell_index, 2),
+            cell.vertices
+        );
         impl_cell.neighbors(cell.neighbors);
         impl_cell.face_vertices(cell.face_vertices);
-
-        std::cout << cell_index << " " << cell.neighbors[0] << " " << cell.face_vertices[0] << std::endl;
     }
-
 
     return cells;
 }
@@ -100,6 +104,7 @@ CellVector inline compute_voronoi_3d(
 NB_MODULE(_multivoro, m) {
     nb::class_<Cell>(m, "Cell")
         .def(nb::init<>())
+        .def_ro("vertices", &Cell::vertices)
         .def_ro("neighbors", &Cell::neighbors)
         .def_ro("face_vertices", &Cell::face_vertices);
     m.def("compute_voronoi_3d", &compute_voronoi_3d);
