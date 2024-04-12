@@ -104,9 +104,39 @@ CellVector inline compute_voronoi_3d(
 NB_MODULE(_multivoro, m) {
     nb::class_<Cell>(m, "Cell")
         .def(nb::init<>())
-        .def_ro("vertices", &Cell::vertices)
-        .def_ro("neighbors", &Cell::neighbors)
-        .def_ro("face_vertices", &Cell::face_vertices);
+        .def(
+            "get_vertices",
+            [](Cell& self){
+                // reshape into a 2d point array
+                const size_t shape[2] = {self.vertices.size() / 3, 3};
+                return nb::ndarray<nb::numpy, double>(
+                    /* data = */ self.vertices.data(),
+                    /* ndim = */ 2,
+                    /* shape = */ shape,
+                    /* owner = */ nb::handle()
+                );
+            }
+        )
+        .def(
+            "get_neighbors",
+            [](Cell& self){
+                return nb::ndarray<nb::numpy, int>(
+                    /* data = */ self.neighbors.data(),
+                    /* shape = */ {self.neighbors.size()},
+                    /* owner = */ nb::handle()
+                );
+            }
+        )
+        .def(
+            "get_face_vertices",
+            [](Cell& self){
+                return nb::ndarray<nb::numpy, int>(
+                    /* data = */ self.face_vertices.data(),
+                    /* shape = */ {self.face_vertices.size()},
+                    /* owner = */ nb::handle()
+                );
+            }
+        );
     m.def("compute_voronoi_3d", &compute_voronoi_3d);
 }
 
