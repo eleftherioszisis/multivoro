@@ -25,7 +25,12 @@ def test_compute_voronoi():
         0.1,
     ])
     limits = np.array([
-        [0., 0., 0.],
-        [1., 1., 1.],
+        [-1., -1., -1.],
+        [2., 2., 2.],
     ])
     compute_voronoi(points=points, radii=radii, limits=limits)
+
+
+if __name__ == "__main__":
+
+    test_compute_voronoi()
