@@ -1,36 +1,66 @@
+import pytest
 import numpy as np
 from multivoro import compute_voronoi
 
+from numpy import testing as npt
 
 
-def test_compute_voronoi():
+@pytest.mark.parametrize(
+    "cfg",
+    [
+        {
+            "points": np.array([[-1.0, 0.0, 0.0], [1.0, 0.0, 0.0]]),
+            "radii": np.array([1.0, 1.0]),
+            "limits": np.array([[-2.0, -1.0, -1.0], [2.0, 1.0, 1.0]]),
+            "expected": [
+                {
+                    "vertices": [
+                        [-2.0, -1.0, -1.0],
+                        [0.0, -1.0, -1.0],
+                        [-2.0, 1.0, -1.0],
+                        [0.0, 1.0, -1.0],
+                        [-2.0, -1.0, 1.0],
+                        [0.0, -1.0, 1.0],
+                        [-2.0, 1.0, 1.0],
+                        [0.0, 1.0, 1.0],
+                    ],
+                },
+                {
+                    "vertices": [
+                        [0.0, -1.0, -1.0],
+                        [2.0, -1.0, -1.0],
+                        [0.0, 1.0, -1.0],
+                        [2.0, 1.0, -1.0],
+                        [0.0, -1.0, 1.0],
+                        [2.0, -1.0, 1.0],
+                        [0.0, 1.0, 1.0],
+                        [2.0, 1.0, 1.0],
+                    ],
+                },
+            ]
+        },
+    ],
+)
+def test_compute_voronoi(cfg):
 
-    points = np.array([
-        [0., 0., 0.],
-        [0., 1., 0.],
-        [0., 0., 1.],
-        [1., 0., 0.],
-        [1., 1., 0.],
-        [1., 0., 1.],
-        [1., 1., 1.],
-    ]
-                      )
-    radii = np.array([
-        0.1,
-        0.1,
-        0.1,
-        0.1,
-        0.1,
-        0.1,
-        0.1,
-    ])
-    limits = np.array([
-        [-1., -1., -1.],
-        [2., 2., 2.],
-    ])
-    compute_voronoi(points=points, radii=radii, limits=limits)
+    cells = compute_voronoi(
+        points=cfg["points"],
+        radii=cfg["radii"],
+        limits=cfg["limits"],
+    )
+    assert len(cells) == len(cfg["expected"])
+    for i, cell in enumerate(cells):
+        npt.assert_allclose(cell.get_vertices(), cfg["expected"][i]["vertices"])
 
 
-if __name__ == "__main__":
 
-    test_compute_voronoi()
+def test_compute_voronoi__raises():
+
+    points = np.array([[-2.0, 0.0, 0.0], [1.0, 0.0, 0.0]])
+
+    radii = np.array([1.0, 1.0])
+
+    limits = np.array([[-1., -1., -1.], [1., 1., 1.]])
+
+    with pytest.raises(ValueError):
+        compute_voronoi(points, radii=radii, limits=limits)

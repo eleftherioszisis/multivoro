@@ -66,6 +66,12 @@ CellVector inline compute_voronoi_3d(
 
     // populate container with points
     for (int i = 0; i < v_points.shape(0); ++i) {
+
+        const bool is_inside_container = container.point_inside(v_points(i, 0), v_points(i, 1), v_points(i, 2));
+        if (not is_inside_container){
+            throw nb::value_error("Points outside container walls.");
+        }
+
         container.put(i, v_points(i, 0), v_points(i, 1), v_points(i, 2), v_radii(i));
     }
 
@@ -102,6 +108,7 @@ CellVector inline compute_voronoi_3d(
 
 
 NB_MODULE(_multivoro, m) {
+
     nb::class_<Cell>(m, "Cell")
         .def(nb::init<>())
         .def(

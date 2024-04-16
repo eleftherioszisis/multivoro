@@ -15,12 +15,12 @@ def compute_voronoi(
 ):
     """Generate a Voronoi or Laguerre tessellation.
     """
-    points = _parse_points(points)
+    points = _points(points)
 
     if radii is None:
         raise NotImplementedError("Not yet supported.")
 
-    radii = _parse_radii(radii, len(points))
+    radii = _radii(radii, len(points))
 
     limits = _limits(limits)
     blocks = _blocks(blocks, limits, len(points))
@@ -29,7 +29,7 @@ def compute_voronoi(
     return _compute_voronoi_3d(points, radii, limits, blocks, periodic_boundaries)
 
 
-def _parse_points(points: np.ndarray) -> np.ndarray:
+def _points(points: np.ndarray) -> np.ndarray:
     """Ensure `points` array has the correct dtype, contiguous order, and shape."""
 
     result = np.asarray(points, dtype=float, order="C")
@@ -40,7 +40,7 @@ def _parse_points(points: np.ndarray) -> np.ndarray:
     return result
 
 
-def _parse_radii(radii: np.ndarray | None, n_elements: int) -> np.ndarray | None:
+def _radii(radii: np.ndarray | None, n_elements: int) -> np.ndarray | None:
 
     radii = np.asarray(radii, dtype=float, order="C")
 
