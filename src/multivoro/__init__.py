@@ -13,7 +13,7 @@ def compute_voronoi(
     points: np.ndarray,
     *,
     limits: np.ndarray,
-    periodic_boundaries: tuple[bool] = (False, False, False),
+    periodic_boundaries: tuple = (False, False, False),
     radii: Optional[np.ndarray] = None,
     blocks: Optional[np.ndarray] = None,
 ):
@@ -83,7 +83,7 @@ def _blocks(blocks: Optional[np.ndarray], limits: np.ndarray, n_elements: int) -
     )
 
 
-def _periodic_boundaries(periodic_boundaries: np.ndarray) -> np.ndarray:
+def _periodic_boundaries(periodic_boundaries: tuple) -> np.ndarray:
     periodic_boundaries = np.asarray(periodic_boundaries, dtype=bool)
 
     if periodic_boundaries.shape != (3,):
