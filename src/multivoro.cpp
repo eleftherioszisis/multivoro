@@ -38,7 +38,7 @@ CellVector inline compute_voronoi_3d(
     nb::ndarray<double, nb::ndim<2>> points,
     nb::ndarray<double, nb::ndim<1>> radii,
     nb::ndarray<double, nb::ndim<2>> limits,
-    nb::ndarray<size_t, nb::ndim<1>> blocks,
+    nb::ndarray<uint32_t, nb::ndim<1>> blocks,
     nb::ndarray<bool, nb::ndim<1>> periodic_boundaries
     ) {
 
