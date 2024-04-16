@@ -1,5 +1,7 @@
 """Multivoro."""
 
+from typing import Optional
+
 import numpy as np
 
 from multivoro.exceptions import MultiVoroError
@@ -12,8 +14,8 @@ def compute_voronoi(
     *,
     limits: np.ndarray,
     periodic_boundaries: tuple[bool] = (False, False, False),
-    radii: np.ndarray | None = None,
-    blocks: np.ndarray | None = None,
+    radii: Optional[np.ndarray] = None,
+    blocks: Optional[np.ndarray] = None,
 ):
     """Generate a Voronoi or Laguerre tessellation."""
     points = _points(points)
@@ -40,7 +42,7 @@ def _points(points: np.ndarray) -> np.ndarray:
     return result
 
 
-def _radii(radii: np.ndarray | None, n_elements: int) -> np.ndarray | None:
+def _radii(radii: Optional[np.ndarray], n_elements: int) -> Optional[np.ndarray]:
     radii = np.asarray(radii, dtype=float, order="C")
 
     if radii.ndim != 1 or len(radii) != n_elements:
@@ -60,7 +62,7 @@ def _limits(limits: np.ndarray) -> np.ndarray:
     return limits
 
 
-def _blocks(blocks: np.ndarray | None, limits: np.ndarray, n_elements: int) -> np.ndarray:
+def _blocks(blocks: Optional[np.ndarray], limits: np.ndarray, n_elements: int) -> np.ndarray:
     if blocks is not None:
         blocks = np.asarray(blocks, dtype=np.uint32, order="C")
 
