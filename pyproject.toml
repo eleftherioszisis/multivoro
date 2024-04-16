@@ -42,6 +42,7 @@ test-command = "pytest {project}/tests"
 test-requires = "pytest"
 
 # Only target 64 bit architectures
+skip = ["pp*"]
 archs = ["auto64"]
 
 # Needed for full C++17 support on macOS
