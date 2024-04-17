@@ -14,6 +14,9 @@ authors = [
 classifiers = [
     "License :: BSD",
 ]
+dependencies=[
+    "numpy",
+]
 # Optional: runtime dependency specification
 # dependencies = [ "cryptography >=41.0" ]
 
@@ -39,8 +42,47 @@ test-command = "pytest {project}/tests"
 test-requires = "pytest"
 
 # Only target 64 bit architectures
-archs = ["autog4"]
+skip = ["pp38-*"]
+archs = ["auto64"]
 
 # Needed for full C++17 support on macOS
 [tool.cibuildwheel.macos.environment]
 MACOSX_DEPLOYMENT_TARGET = "10.14"
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+
+[tool.ruff.lint]
+select = [
+    "A", # flake8-builtins
+    "B", # bugbear
+    "D", # pydocstyle
+    "E", # pycodestyle
+    "F", # pyflakes
+    "I", # isort
+    "S", # bandit
+    "UP", # pyupgrade
+]
+ignore = [
+    "S107", "S602", "S603", "S608"
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+# Enable auto-formatting of code examples in docstrings. Markdown,
+# reStructuredText code/literal blocks and doctests are all supported.
+docstring-code-format = true
+# Set the line length limit used when formatting code snippets in
+# docstrings.
+docstring-code-line-length = 100
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false

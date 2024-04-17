@@ -1,20 +1,23 @@
+"""Multivoro."""
+
+from typing import Optional
+
 import numpy as np
-from collections.abc import Sequence
+
+from multivoro.exceptions import MultiVoroError
 
 from ._multivoro import compute_voronoi_3d as _compute_voronoi_3d
-from multivoro.exceptions import MultiVoroError
 
 
 def compute_voronoi(
     points: np.ndarray,
     *,
     limits: np.ndarray,
-    periodic_boundaries: tuple[bool] = (False, False, False),
-    radii: np.ndarray | None = None,
-    blocks: np.ndarray | None =None
+    periodic_boundaries: tuple = (False, False, False),
+    radii: Optional[np.ndarray] = None,
+    blocks: Optional[np.ndarray] = None,
 ):
-    """Generate a Voronoi or Laguerre tessellation.
-    """
+    """Generate a Voronoi or Laguerre tessellation."""
     points = _points(points)
 
     if radii is None:
@@ -31,7 +34,6 @@ def compute_voronoi(
 
 def _points(points: np.ndarray) -> np.ndarray:
     """Ensure `points` array has the correct dtype, contiguous order, and shape."""
-
     result = np.asarray(points, dtype=float, order="C")
 
     if result.ndim != 2 or result.shape[1] != 3:
@@ -40,18 +42,18 @@ def _points(points: np.ndarray) -> np.ndarray:
     return result
 
 
-def _radii(radii: np.ndarray | None, n_elements: int) -> np.ndarray | None:
-
+def _radii(radii: Optional[np.ndarray], n_elements: int) -> Optional[np.ndarray]:
     radii = np.asarray(radii, dtype=float, order="C")
 
     if radii.ndim != 1 or len(radii) != n_elements:
-        raise MultiVoroError(f"`points` and `radii` shape mismatch. Expected {n_elements}, got {len(radii)}.")
+        raise MultiVoroError(
+            f"`points` and `radii` shape mismatch. Expected {n_elements}, got {len(radii)}."
+        )
 
     return radii
 
 
 def _limits(limits: np.ndarray) -> np.ndarray:
-
     limits = np.asarray(limits, dtype=float)
 
     if limits.shape != (2, 3):
@@ -60,8 +62,7 @@ def _limits(limits: np.ndarray) -> np.ndarray:
     return limits
 
 
-def _blocks(blocks: np.ndarray | None, limits: np.ndarray, n_elements: int) -> np.ndarray:
-
+def _blocks(blocks: Optional[np.ndarray], limits: np.ndarray, n_elements: int) -> np.ndarray:
     if blocks is not None:
         blocks = np.asarray(blocks, dtype=np.uint32, order="C")
 
@@ -82,10 +83,12 @@ def _blocks(blocks: np.ndarray | None, limits: np.ndarray, n_elements: int) -> n
     )
 
 
-def _periodic_boundaries(periodic_boundaries: np.ndarray) -> np.ndarray:
+def _periodic_boundaries(periodic_boundaries: tuple) -> np.ndarray:
     periodic_boundaries = np.asarray(periodic_boundaries, dtype=bool)
 
     if periodic_boundaries.shape != (3,):
-        raise MultiVoroError(f"`periodic_boundaries` shape mismatch. Expected (3,), got {periofic.shape}")
+        raise MultiVoroError(
+            f"`periodic_boundaries` shape mismatch. Expected (3,), got {periodic_boundaries.shape}"
+        )
 
     return periodic_boundaries
