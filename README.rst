@@ -1,7 +1,7 @@
 multivoro
 ---------
 
-multivoro is a python library that allows building 3D Voronoi/Laguerre tessellations with [voro++ library](http://math.lbl.gov/voro++/) exposed in python via the [nanobind library](https://github.com/wjakob/nanobind).
+multivoro is a python library that allows building 3D Voronoi/Laguerre tessellations with voro++_ exposed in python via the nanobind_ library.
 
 
 Installation
@@ -45,3 +45,6 @@ Acknowledgments
 This work (voro++) was supported by the Director, Office of Science, Computational and
 Technology Research, U.S. Department of Energy under Contract No.
 DE-AC02-05CH11231.
+
+.. _voro++: http://math.lbl.gov/voro++/
+.. _nanobind: https://github.com/wjakob/nanobind
