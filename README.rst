@@ -11,6 +11,7 @@ If one is on a Linux platform, one should be able to use the compiled Python whe
 This is the recommended way.
 
 .. code-block:: bash
+
   pip install multivoro
 
 Voro++ Copyright And Acknowledgments
