@@ -7,19 +7,8 @@
 #include "voro++.hh"
 
 #ifdef _OPENMP
-    #include <omp.h>     // This line won't add the library if you don't compile with -fopenmp option.
-    #ifdef _MSC_VER
-         // For Microsoft compiler
-         #define OMP_FOR(n) __pragma(omp parallel for if(n>10)) 
-    #else  // assuming "__GNUC__" is defined
-         // For GCC compiler
-         #define OMP_FOR(n) _Pragma("omp parallel for if(n>10)")
-    #endif
-#else
-    #define omp_get_thread_num() 0
-    #define OMP_FOR(n)
+    #include <omp.h>
 #endif
-
 
 namespace nb = nanobind;
 
@@ -39,8 +28,8 @@ CellVector inline compute_voronoi_3d(
     nb::ndarray<double, nb::ndim<1>> radii,
     nb::ndarray<double, nb::ndim<2>> limits,
     nb::ndarray<uint32_t, nb::ndim<1>> blocks,
-    nb::ndarray<bool, nb::ndim<1>> periodic_boundaries
-    ) {
+    nb::ndarray<bool, nb::ndim<1>> periodic_boundaries,
+    int n_threads) {
 
     // views for fast access
     auto v_points = points.view();
@@ -61,8 +50,12 @@ CellVector inline compute_voronoi_3d(
         periodic_boundaries(1), // y_prd
         periodic_boundaries(2), // z_prd
         8, // init memory
-        1 // number of threads
-    );
+#ifdef _OPENMP
+        n_threads // number of threads
+#else
+        1         // serial case
+#endif
+        );
 
     // populate container with points
     for (int i = 0; i < v_points.shape(0); ++i) {
@@ -78,6 +71,8 @@ CellVector inline compute_voronoi_3d(
     auto cells = CellVector(points.shape(0));
 
     voro::container_poly_3d::iterator it;
+
+    # pragma omp parallel for num_threads(n_threads)
     for (it = container.begin(); it < container.end(); it++) {
 
         // cell from voro++ implementation with all kinds of stuff
