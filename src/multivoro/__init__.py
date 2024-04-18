@@ -30,6 +30,8 @@ def compute_voronoi(
     blocks = _blocks(blocks, limits, len(points))
     periodic_boundaries = _periodic_boundaries(periodic_boundaries)
 
+    n_threads = max(1, n_threads)
+
     return _compute_voronoi_3d(points, radii, limits, blocks, periodic_boundaries, n_threads)
 
 
