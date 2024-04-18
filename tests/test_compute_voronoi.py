@@ -64,3 +64,15 @@ def test_compute_voronoi__raises():
 
     with pytest.raises(ValueError):
         compute_voronoi(points, radii=radii, limits=limits)
+
+
+def test_compute_voronoi__occlusion_raises():
+
+    points = np.array([[-1.0, -1.0, -1.0], [1.0, 1.0, 1.0]])
+
+    radii = np.array([1.0, 1.0])
+
+    limits = np.array([[-1., -1., -1.], [1., 1., 1.]])
+
+    with pytest.raises(ValueError):
+        compute_voronoi(points, radii=radii, limits=limits)
