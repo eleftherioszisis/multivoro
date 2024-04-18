@@ -1,14 +1,17 @@
-name: Run all tox python3
+name: Run tox checks
 
 on:
-    workflow-dispatch:
-    pull_request:
-    push:
-      branches:
-        - main
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - published
 
 jobs:
-  build:
+  tox_checks:
 
     runs-on: ubuntu-latest
     strategy:
