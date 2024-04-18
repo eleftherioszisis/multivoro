@@ -16,6 +16,7 @@ def compute_voronoi(
     periodic_boundaries: tuple = (False, False, False),
     radii: Optional[np.ndarray] = None,
     blocks: Optional[np.ndarray] = None,
+    n_threads: int = 1,
 ):
     """Generate a Voronoi or Laguerre tessellation."""
     points = _points(points)
@@ -29,7 +30,7 @@ def compute_voronoi(
     blocks = _blocks(blocks, limits, len(points))
     periodic_boundaries = _periodic_boundaries(periodic_boundaries)
 
-    return _compute_voronoi_3d(points, radii, limits, blocks, periodic_boundaries)
+    return _compute_voronoi_3d(points, radii, limits, blocks, periodic_boundaries, n_threads)
 
 
 def _points(points: np.ndarray) -> np.ndarray:
