@@ -1,37 +1,38 @@
-name: Run all tox python3
+name: Tox
 
 on:
-    pull_request:
-    push:
-      branches:
-        - master
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - published
 
 jobs:
-  build:
+  tox_checks:
 
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.11']
 
     steps:
+
     - uses: actions/checkout@v4
+      with:
+        submodules: true
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip setuptools
         pip install tox-gh-actions
+
     - name: Run tox
-      run: |
-        tox
-    - name: Upload to codecov
-      uses: codecov/codecov-action@v4
-      with:
-        fail_ci_if_error: false
-        files: ./coverage.xml
-        flags: pytest
-        name: "neurom-py${{ matrix.python-version }}"
-        token: ${{ secrets.CODECOV_TOKEN }}
+      run: tox
