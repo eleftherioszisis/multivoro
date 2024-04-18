@@ -14,6 +14,24 @@ This is the recommended way.
 
   pip install multivoro
 
+Usage
+-----
+
+.. code-block:: python
+
+   from multivoro import compute_voronoi
+
+   cells = compute_voronoi(
+       points=[[-1.0, 0.0, 0.0], [1.0, 0.0, 0.0]],
+       radii=[1.0, 1.0],
+       limits=[[-2.0, -1.0, -1.0], [2.0, 1.0, 1.0]],
+   )
+
+   for cell in cells:
+       print(cell.get_vertices())
+       print(cell.get_neighbors())
+       print(cell.get_face_vertices())
+
 Voro++ Copyright And Acknowledgments
 ------------------------------------
 
