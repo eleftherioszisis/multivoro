@@ -3,8 +3,8 @@ multivoro
 Multi-Threaded 3D voronoi tessellations
 ---------------------------------------
 
-multivoro is a python library that allows building 3D Voronoi/Laguerre tessellations with `voro++<voro_>`_ exposed in python via the nanobind_ library.
-It leverages the latest `multi-threaded extension of Voro++<voro_mthread_>`_.
+multivoro is a python library that allows building 3D Voronoi/Laguerre tessellations with `voro++ <voro_>`_ exposed in python via the nanobind_ library.
+It leverages the latest `multi-threaded extension of Voro++ <voro_mthread_>`_.
 
 
 Installation
