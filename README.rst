@@ -1,8 +1,15 @@
 multivoro
 ---------
+Parallel cell-based 3D voronoi tessellations
+--------------------------------------------
 
-multivoro is a python library that allows building 3D Voronoi/Laguerre tessellations with voro_ exposed in python via the nanobind_ library.
+multivoro is a python library that allows building 3D Voronoi/Laguerre tessellations with `voro++ <voro_site_>`_ exposed in python via the nanobind_ library.
+It leverages the latest `multi-threaded extension of Voro++ <voro_mthread_>`_ to allow computing the voronoi cells in parallel.
 
+Codebases
+---------
+* `Voro++ <voro_repo_>`_
+* nanobind_
 
 Installation
 ------------
@@ -13,6 +20,12 @@ This is the recommended way.
 .. code-block:: bash
 
   pip install multivoro
+
+To build multivoro from source:
+
+.. code-block:: bash
+
+   sudo apt install openmp
 
 Usage
 -----
@@ -64,5 +77,8 @@ This work (voro++) was supported by the Director, Office of Science, Computation
 Technology Research, U.S. Department of Energy under Contract No.
 DE-AC02-05CH11231.
 
-.. _voro: http://math.lbl.gov/voro++/
+
+.. _voro_repo: https://github.com/chr1shr/voro
+.. _voro_site: http://math.lbl.gov/voro++/
+.. _voro_mthread: https://doi.org/10.1016/j.cpc.2023.108832
 .. _nanobind: https://github.com/wjakob/nanobind
