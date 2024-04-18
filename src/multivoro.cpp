@@ -1,5 +1,7 @@
 #include <vector>
 #include <iostream>
+#include <sstream>
+#include <iterator>
 #include <nanobind/nanobind.h>
 #include <nanobind/ndarray.h>
 #include <nanobind/stl/vector.h>
@@ -70,6 +72,8 @@ CellVector inline compute_voronoi_3d(
 
     auto cells = CellVector(points.shape(0));
 
+    std::vector<int> is_successful(cells.size());
+
     voro::container_poly_3d::iterator it;
 
     # pragma omp parallel for num_threads(n_threads)
@@ -78,11 +82,11 @@ CellVector inline compute_voronoi_3d(
         // cell from voro++ implementation with all kinds of stuff
         voro::voronoicell_neighbor_3d impl_cell;
 
-        // compute voronoi cell
-        container.compute_cell(impl_cell, it);
-
         // find the id of the cell from its block index and block local position
         const auto cell_index = container.id[it->ijk][it->q];
+
+        // compute voronoi cell and store wheter it's successful or not
+        is_successful[cell_index] = container.compute_cell(impl_cell, it);
 
         // cell we are returning with well-behaved attributes
         auto& cell = cells[cell_index];
@@ -96,6 +100,21 @@ CellVector inline compute_voronoi_3d(
         );
         impl_cell.neighbors(cell.neighbors);
         impl_cell.face_vertices(cell.face_vertices);
+    }
+
+    // Add the failed ids in the string stream
+    std::stringstream stream;
+    for (size_t i = 0; i < is_successful.size(); i++){
+        if (not is_successful[i]){
+            stream << i << ",";
+        }
+    }
+
+    // if stream is not empty -> we have failed and we throw because there will be empty cells
+    if (stream.tellp() != std::streampos(0)){
+
+        std::string preable = "Points are overlapping with the container walls and are occluded: ";
+        throw nb::value_error((preable + stream.str()).c_str());
     }
 
     return cells;
