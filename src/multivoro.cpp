@@ -23,6 +23,7 @@ struct Cell {
     DoubleVector vertices;
 };
 
+
 using CellVector = std::vector<Cell>;
 
 CellVector inline compute_voronoi_3d(
@@ -34,8 +35,10 @@ CellVector inline compute_voronoi_3d(
     int n_threads) {
 
     // views for fast access
-    auto v_points = points.view();
-    auto v_radii = radii.view();
+    const auto v_points = points.view();
+    const auto v_radii = radii.view();
+
+    const size_t n_cells = v_points.shape(0);
 
     // initialize container
     voro::container_poly_3d container(
@@ -55,12 +58,12 @@ CellVector inline compute_voronoi_3d(
 #ifdef _OPENMP
         n_threads // number of threads
 #else
-        1         // serial case
+        1         // force 1 thread in serial case, segfault otherwise
 #endif
         );
 
     // populate container with points
-    for (int i = 0; i < v_points.shape(0); ++i) {
+    for (int i = 0; i < n_cells; ++i) {
 
         const bool is_inside_container = container.point_inside(v_points(i, 0), v_points(i, 1), v_points(i, 2));
         if (not is_inside_container){
@@ -70,9 +73,8 @@ CellVector inline compute_voronoi_3d(
         container.put(i, v_points(i, 0), v_points(i, 1), v_points(i, 2), v_radii(i));
     }
 
-    auto cells = CellVector(points.shape(0));
-
-    std::vector<int> is_successful(cells.size());
+    CellVector cells(n_cells);
+    std::vector<int> is_successful(n_cells, 0);
 
     voro::container_poly_3d::iterator it;
 
@@ -100,21 +102,6 @@ CellVector inline compute_voronoi_3d(
         );
         impl_cell.neighbors(cell.neighbors);
         impl_cell.face_vertices(cell.face_vertices);
-    }
-
-    // Add the failed ids in the string stream
-    std::stringstream stream;
-    for (size_t i = 0; i < is_successful.size(); i++){
-        if (not is_successful[i]){
-            stream << i << ",";
-        }
-    }
-
-    // if stream is not empty -> we have failed and we throw because there will be empty cells
-    if (stream.tellp() != std::streampos(0)){
-
-        std::string preable = "Points are overlapping with the container walls and are occluded: ";
-        throw nb::value_error((preable + stream.str()).c_str());
     }
 
     return cells;
