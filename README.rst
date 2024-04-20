@@ -3,6 +3,8 @@ multivoro
 Parallel cell-based 3D voronoi tessellations
 --------------------------------------------
 
+.. image:: logo.png
+
 multivoro is a python library that allows building 3D Voronoi/Laguerre tessellations with `voro++ <voro_site_>`_ exposed in python via the nanobind_ library.
 It leverages the latest `multi-threaded extension of Voro++ <voro_mthread_>`_ to allow computing the voronoi cells in parallel.
 
