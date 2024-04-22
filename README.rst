@@ -22,12 +22,14 @@ This is the recommended way.
 
   pip install multivoro
 
-To build multivoro from source:
+To build multivoro from source in Ubuntu:
 
 .. code-block:: bash
 
-   sudo apt install openmp
+   # python versions to choose from: [python3.8-python3.12]
+   sudo apt install openmp python3.10-dev python3.10-venv
    git clone --recurse-submodules https://github.com/eleftherioszisis/multivoro.git
+   python3.10 -mvenv venv && source ./venv/bin/activate
    cd multivoro && pip install .
 
 Usage
