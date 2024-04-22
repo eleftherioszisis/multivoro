@@ -1,4 +1,4 @@
-.. image:: logo.png
+.. image:: https://github.com/eleftherioszisis/multivoro/blob/main/logo.png
 
 Parallel cell-based 3D voronoi tessellations
 --------------------------------------------
