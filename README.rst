@@ -27,6 +27,8 @@ To build multivoro from source:
 .. code-block:: bash
 
    sudo apt install openmp
+   git clone --recurse-submodules https://github.com/eleftherioszisis/multivoro.git
+   cd multivoro && pip install .
 
 Usage
 -----
