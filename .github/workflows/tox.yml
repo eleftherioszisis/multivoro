@@ -1,4 +1,4 @@
-name: Tox
+name: tox
 
 on:
   workflow_dispatch:
@@ -11,12 +11,12 @@ on:
       - published
 
 jobs:
-  tox_checks:
+  checks:
 
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.11']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
     steps:
 
@@ -36,3 +36,9 @@ jobs:
 
     - name: Run tox
       run: tox
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4.0.1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: eleftherioszisis/multivoro
