@@ -9,6 +9,7 @@ on:
   release:
     types:
       - published
+  schedule: '0 0 * * *'
 
 jobs:
   checks:
