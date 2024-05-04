@@ -99,7 +99,9 @@ target_include_directories(
     ext/voro/src
 )
 
-target_link_libraries(_multivoro PRIVATE ${OpenMP_CXX_FLAGS})
+if (OPENMP_FOUND)
+    target_link_libraries(_multivoro PRIVATE ${OpenMP_CXX_FLAGS})
+endif
 
 # Install directive for scikit-build-core
 install(TARGETS _multivoro LIBRARY DESTINATION multivoro)
