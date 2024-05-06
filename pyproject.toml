@@ -60,6 +60,7 @@ archs = ["auto64"]
 [tool.cibuildwheel.macos.environment]
 before-all = "sh ci/build_libomp.sh"
 MACOSX_DEPLOYMENT_TARGET = "10.14"
+LD_LIBRARY_PATH = "{project}/libs_build"
 
 
 [tool.ruff]
