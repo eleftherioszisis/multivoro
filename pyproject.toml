@@ -58,7 +58,7 @@ archs = ["auto64"]
 
 # Needed for full C++17 support on macOS
 [tool.cibuildwheel.macos.environment]
-before-all = "brew install libomp llvm"
+before-all = "brew install libomp && brew link libomp --force"
 MACOSX_DEPLOYMENT_TARGET = "10.14"
 
 
