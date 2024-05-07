@@ -99,7 +99,7 @@ target_include_directories(
     ext/voro/src
 )
 
-if (OPENMP_FOUND)
+if (USE_OpenMP)
   target_link_libraries(_multivoro PRIVATE ${OpenMP_CXX_FLAGS})
 endif()
 
