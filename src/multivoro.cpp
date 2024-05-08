@@ -1,7 +1,5 @@
 #include <vector>
-#include <iostream>
 #include <sstream>
-#include <iterator>
 #include <nanobind/nanobind.h>
 #include <nanobind/ndarray.h>
 #include <nanobind/stl/vector.h>
