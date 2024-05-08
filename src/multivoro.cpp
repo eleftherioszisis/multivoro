@@ -66,7 +66,7 @@ CellVector inline compute_voronoi_3d(
     for (int i = 0; i < n_cells; ++i) {
 
         const bool is_inside_container = container.point_inside(v_points(i, 0), v_points(i, 1), v_points(i, 2));
-        if (not is_inside_container){
+        if (!is_inside_container){
             throw nb::value_error("Points outside container walls.");
         }
 
