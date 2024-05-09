@@ -1,6 +1,6 @@
 [submodule "ext/voro"]
 	path = ext/voro
-	url = https://github.com/chr1shr/voro.git
+	url = https://github.com/eleftherioszisis/voro.git
 	branch = dev
 [submodule "ext/nanobind"]
 	path = ext/nanobind
