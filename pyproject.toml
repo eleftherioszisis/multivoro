@@ -58,7 +58,7 @@ test-command = "pytest {project}/tests"
 test-requires = "pytest"
 
 # Only target 64 bit architectures
-skip = ["pp*", "*musllinux*"]
+skip = ["pp*", "*musllinux*", "cp38*", "cp39*", "cp310*"]
 archs = ["auto64"]
 
 
