@@ -12,8 +12,6 @@
 
 namespace nb = nanobind;
 
-namespace multivoro
-{
 
 using IntVector = std::vector<int>;
 using DoubleVector = std::vector<double>;
@@ -107,15 +105,14 @@ CellVector inline compute_voronoi_3d(
 
     return cells;
 }
-}
 
 NB_MODULE(_multivoro, m) {
 
-    nb::class_<multivoro::Cell>(m, "Cell")
+    nb::class_<Cell>(m, "Cell")
         .def(nb::init<>())
         .def(
             "get_vertices",
-            [](multivoro::Cell& self){
+            [](Cell& self){
                 // reshape into a 2d point array
                 const size_t shape[2] = {self.vertices.size() / 3, 3};
                 return nb::ndarray<nb::numpy, double>(
@@ -128,7 +125,7 @@ NB_MODULE(_multivoro, m) {
         )
         .def(
             "get_neighbors",
-            [](multivoro::Cell& self){
+            [](Cell& self){
                 return nb::ndarray<nb::numpy, int>(
                     /* data = */ self.neighbors.data(),
                     /* shape = */ {self.neighbors.size()},
@@ -138,7 +135,7 @@ NB_MODULE(_multivoro, m) {
         )
         .def(
             "get_face_vertices",
-            [](multivoro::Cell& self){
+            [](Cell& self){
                 return nb::ndarray<nb::numpy, int>(
                     /* data = */ self.face_vertices.data(),
                     /* shape = */ {self.face_vertices.size()},
@@ -146,6 +143,6 @@ NB_MODULE(_multivoro, m) {
                 );
             }
         );
-    m.def("compute_voronoi_3d", &multivoro::compute_voronoi_3d);
+    m.def("compute_voronoi_3d", &compute_voronoi_3d);
 }
 
