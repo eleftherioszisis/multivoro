@@ -1,7 +1,5 @@
 #include <vector>
-#include <iostream>
 #include <sstream>
-#include <iterator>
 #include <nanobind/nanobind.h>
 #include <nanobind/ndarray.h>
 #include <nanobind/stl/vector.h>
@@ -13,6 +11,7 @@
 #endif
 
 namespace nb = nanobind;
+
 
 using IntVector = std::vector<int>;
 using DoubleVector = std::vector<double>;
@@ -66,7 +65,7 @@ CellVector inline compute_voronoi_3d(
     for (int i = 0; i < n_cells; ++i) {
 
         const bool is_inside_container = container.point_inside(v_points(i, 0), v_points(i, 1), v_points(i, 2));
-        if (not is_inside_container){
+        if (!is_inside_container){
             throw nb::value_error("Points outside container walls.");
         }
 
@@ -106,7 +105,6 @@ CellVector inline compute_voronoi_3d(
 
     return cells;
 }
-
 
 NB_MODULE(_multivoro, m) {
 
