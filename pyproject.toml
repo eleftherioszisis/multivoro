@@ -62,7 +62,7 @@ skip = ["pp*", "*musllinux*"]
 archs = ["auto64"]
 
 [tool.cibuildwheel.windows]
-before-all = 'call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" -vcvars_ver=14.29'
+before-all = 'call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" -vcvars_ver=14.1'
 
 # Needed for full C++17 support on macOS
 [tool.cibuildwheel.macos.environment]
