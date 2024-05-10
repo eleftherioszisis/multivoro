@@ -35,6 +35,9 @@ if (NOT SKBUILD)
   after editing C++ files.")
 endif()
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Try to import all Python components potentially needed by nanobind
 find_package(Python 3.8
   REQUIRED COMPONENTS Interpreter Development.Module
