@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "multivoro"
-version = "0.0.1"
+version = "0.1.0"
 description = "Parallel cell-based 3D voronoi tessellations"
 readme = "README.rst"
 requires-python = ">=3.8"
