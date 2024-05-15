@@ -3,7 +3,6 @@
 Parallel cell-based 3D voronoi tessellations
 --------------------------------------------
 
-
 multivoro is a python library that allows building 3D Voronoi/Laguerre tessellations with `voro++ <voro_site_>`_ exposed in python via the nanobind_ library.
 It leverages the latest `multi-threaded extension of Voro++ <voro_mthread_>`_ to allow computing the voronoi cells in parallel.
 
@@ -15,22 +14,40 @@ Codebases
 Installation
 ------------
 
-If one is on a Linux platform, one should be able to use the compiled Python wheels.
-This is the recommended way.
+Wheels
+~~~~~~
+There are available pre-compiled wheels to pip install for Linux and macOS.
+However, note that these wheels are compiled without multithreading support.
+
+To install them in your system:
 
 .. code-block:: bash
 
   pip install multivoro
 
+Source
+~~~~~~
 To build multivoro from source in Ubuntu:
+
+Setup a python virtual environment:
 
 .. code-block:: bash
 
    # python versions to choose from: [python3.8-python3.12]
-   sudo apt install openmp python3.10-dev python3.10-venv
+   sudo apt install python3.10-dev python3.10-venv
+   python3.10 -mvenv venv
+   source ./venv/bin/activate
+
+Install openmp runtime and compile the wheel:
+
+.. code-block:: bash
+
+   sudo apt install libomp-dev
    git clone --recurse-submodules https://github.com/eleftherioszisis/multivoro.git
-   python3.10 -mvenv venv && source ./venv/bin/activate
-   cd multivoro && pip install .
+   cd multivoro
+   USE_OpenMP=ON pip install .
+
+USE_OpenMP environment variable is used as an option in multivoro cmake. By default it is set to 'OFF'.
 
 Usage
 -----
@@ -43,6 +60,7 @@ Usage
        points=[[-1.0, 0.0, 0.0], [1.0, 0.0, 0.0]],
        radii=[1.0, 1.0],
        limits=[[-2.0, -1.0, -1.0], [2.0, 1.0, 1.0]],
+       n_threads=6,
    )
 
    for cell in cells:
