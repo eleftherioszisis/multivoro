@@ -39,7 +39,7 @@ jobs:
 
     - name: Run tox
       run: tox
-      with:
+      env:
         USE_OpenMP: ${{ matrix.openmp-mode }}
 
     - name: Upload coverage reports to Codecov
