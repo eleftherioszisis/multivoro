@@ -4,6 +4,55 @@ from multivoro import compute_voronoi
 from numpy import testing as npt
 
 
+def test_compute_voronoi_3d():
+    points = np.array([[-1.0, 0.0, 0.0], [1.0, 0.0, 0.0]])
+    radii = np.array([1.0, 1.0])
+    limits = np.array([[-2.0, -1.0, -1.0], [2.0, 1.0, 1.0]])
+    expected = [
+        {
+            "vertices": [
+                [-2.0, -1.0, -1.0],
+                [0.0, -1.0, -1.0],
+                [-2.0, 1.0, -1.0],
+                [0.0, 1.0, -1.0],
+                [-2.0, -1.0, 1.0],
+                [0.0, -1.0, 1.0],
+                [-2.0, 1.0, 1.0],
+                [0.0, 1.0, 1.0],
+            ],
+        },
+        {
+            "vertices": [
+                [0.0, -1.0, -1.0],
+                [2.0, -1.0, -1.0],
+                [0.0, 1.0, -1.0],
+                [2.0, 1.0, -1.0],
+                [0.0, -1.0, 1.0],
+                [2.0, -1.0, 1.0],
+                [0.0, 1.0, 1.0],
+                [2.0, 1.0, 1.0],
+            ],
+        },
+    ]
+    cells = compute_voronoi(
+        points=points,
+        radii=radii,
+        limits=limits,
+    )
+    assert len(cells) == len(expected)
+    for i, cell in enumerate(cells):
+        npt.assert_allclose(cell.get_vertices(), expected[i]["vertices"])
+
+    cells = compute_voronoi(
+        points=points,
+        radii=None,
+        limits=limits,
+    )
+    assert len(cells) == len(expected)
+    for i, cell in enumerate(cells):
+        npt.assert_allclose(cell.get_vertices(), expected[i]["vertices"])
+
+
 @pytest.mark.parametrize(
     "cfg",
     [
@@ -40,7 +89,7 @@ from numpy import testing as npt
         },
     ],
 )
-def test_compute_voronoi(cfg):
+def test_compute_voronoi_3d__no_radii(cfg):
     cells = compute_voronoi(
         points=cfg["points"],
         radii=cfg["radii"],
