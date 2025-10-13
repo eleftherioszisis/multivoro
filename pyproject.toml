@@ -110,3 +110,55 @@ docstring-code-format = true
 docstring-code-line-length = 100
 # Like Black, respect magic trailing commas.
 skip-magic-trailing-comma = false
+
+[tool.tox]
+requires = ["tox>=4.19"]
+env_list = [
+    "lint",
+    "docs", 
+    "coverage",
+    "check-packaging",
+    "py{38,39,310,311,312,313,314}",
+]
+
+[tool.tox.env.py]
+description = "Run tests with Python"
+deps = ["pytest", "pytest-cov"]
+pass_env = ["USE_OpenMP"]
+commands = [["pytest", "--cov={envsitepackagesdir}/multivoro", "--cov-report", "term-missing", "--cov-fail-under=80", "--cov-report=xml", "--no-cov-on-fail", "{posargs}"]]
+
+[tool.tox.env.lint]
+description = "Run linting checks"
+deps = ["ruff"]
+commands = [
+    ["ruff", "format", "--check", "src/multivoro", "tests/"],
+    ["ruff", "check", "src/multivoro"],
+]
+
+[tool.tox.env.format]
+description = "Format code"
+deps = ["ruff"]
+commands = [
+    ["ruff", "check", "--fix", "--select", "I", "src/multivoro", "tests/"],
+    ["ruff", "format", "src/multivoro", "tests/"],
+]
+
+[tool.tox.env."check-packaging"]
+description = "Check package build"
+skip_install = true
+deps = ["build", "twine"]
+commands = [
+    ["python", "-m", "build", "-o", "{envtmpdir}/dist"],
+    ["twine", "check", "{envtmpdir}/dist/*"],
+]
+
+[tool.tox.gh_actions]
+python = [
+    "3.8: py38",
+    "3.9: py39", 
+    "3.10: py310, check-packaging",
+    "3.11: py311, lint",
+    "3.12: py312",
+    "3.13: py313",
+    "3.14: py314",
+]
