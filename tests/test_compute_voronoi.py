@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
-from multivoro import compute_voronoi
 from numpy import testing as npt
+
+from multivoro import compute_voronoi
 
 
 @pytest.mark.parametrize(
