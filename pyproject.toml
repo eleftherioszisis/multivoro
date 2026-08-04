@@ -6,7 +6,7 @@ build-backend = "scikit_build_core.build"
 name = "multivoro"
 description = "Parallel cell-based 3D voronoi tessellations"
 readme = "README.rst"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 authors = [
     { name = "Eleftherios Zisis", email = "elef.zisis@gmail.com" },
 ]
@@ -67,6 +67,10 @@ test-requires = "pytest"
 # Only target 64 bit architectures
 skip = ["pp*", "*musllinux*"]
 archs = ["auto64"]
+
+# Use a newer manylinux image so numpy binary wheels are available in tests
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
 
 # Needed for full C++17 support on macOS
 [tool.cibuildwheel.macos.environment]
