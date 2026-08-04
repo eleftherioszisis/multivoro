@@ -49,6 +49,7 @@ def test_compute_voronoi(cfg):
     )
     assert len(cells) == len(cfg["expected"])
     for i, cell in enumerate(cells):
+        assert cell.is_successful
         npt.assert_allclose(cell.get_vertices(), cfg["expected"][i]["vertices"])
 
 
@@ -61,6 +62,27 @@ def test_compute_voronoi__raises():
 
     with pytest.raises(ValueError):
         compute_voronoi(points, radii=radii, limits=limits)
+
+
+def test_compute_voronoi__dominated_cell():
+    """A seed with a much smaller radius can be fully dominated (empty cell)."""
+    points = np.array(
+        [
+            [0.0, 0.0, 0.0],
+            [0.1, 0.0, 0.0],
+        ]
+    )
+    radii = np.array([1.0, 0.01])
+    limits = np.array([[-1.0, -1.0, -1.0], [1.0, 1.0, 1.0]])
+
+    cells = compute_voronoi(points=points, radii=radii, limits=limits)
+
+    assert len(cells) == 2
+    assert cells[0].is_successful
+    assert not cells[1].is_successful
+    assert cells[1].get_vertices().shape == (0, 3)
+    assert cells[1].get_neighbors().size == 0
+    assert cells[1].get_face_vertices().size == 0
 
 
 def test_compute_voronoi__three_cells():
@@ -77,6 +99,10 @@ def test_compute_voronoi__three_cells():
     radii = np.array([0.1, 0.1, 0.1])
 
     cell1, cell2, cell3 = compute_voronoi(points=points, radii=radii, limits=limits)
+
+    assert cell1.is_successful
+    assert cell2.is_successful
+    assert cell3.is_successful
 
     expected_vertices_1 = np.array(
         [
