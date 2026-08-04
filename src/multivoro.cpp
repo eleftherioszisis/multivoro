@@ -20,6 +20,7 @@ struct Cell {
     IntVector neighbors;
     IntVector face_vertices;
     DoubleVector vertices;
+    bool is_successful = false;
 };
 
 
@@ -73,7 +74,6 @@ CellVector inline compute_voronoi_3d(
     }
 
     CellVector cells(n_cells);
-    std::vector<int> is_successful(n_cells, 0);
 
     voro::container_poly_3d::iterator it;
 
@@ -86,11 +86,14 @@ CellVector inline compute_voronoi_3d(
         // find the id of the cell from its block index and block local position
         const auto cell_index = container.id[it->ijk][it->q];
 
-        // compute voronoi cell and store wheter it's successful or not
-        is_successful[cell_index] = container.compute_cell(impl_cell, it);
-
         // cell we are returning with well-behaved attributes
         auto& cell = cells[cell_index];
+
+        // compute voronoi cell and store whether it's successful or not
+        cell.is_successful = container.compute_cell(impl_cell, it);
+        if (!cell.is_successful) {
+            continue;
+        }
 
         // populate the return cell attributes using the voro cell methods
         impl_cell.vertices(
@@ -110,6 +113,7 @@ NB_MODULE(_multivoro, m) {
 
     nb::class_<Cell>(m, "Cell")
         .def(nb::init<>())
+        .def_ro("is_successful", &Cell::is_successful)
         .def(
             "get_vertices",
             [](Cell& self){
