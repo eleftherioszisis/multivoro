@@ -33,7 +33,7 @@ Setup a python virtual environment:
 
 .. code-block:: bash
 
-   # python versions to choose from: [python3.8-python3.12]
+   # python versions to choose from: [python3.10-python3.14]
    sudo apt install python3.10-dev python3.10-venv
    python3.10 -mvenv venv
    source ./venv/bin/activate

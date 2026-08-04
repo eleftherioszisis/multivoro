@@ -6,7 +6,7 @@ build-backend = "scikit_build_core.build"
 name = "multivoro"
 description = "Parallel cell-based 3D voronoi tessellations"
 readme = "README.rst"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 authors = [
     { name = "Eleftherios Zisis", email = "elef.zisis@gmail.com" },
 ]
